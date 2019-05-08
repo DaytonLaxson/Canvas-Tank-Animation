@@ -1,0 +1,168 @@
+<html>
+	<head>
+	<title>Canvas  tutorial</title>
+		<script  type="text/javascript">
+		
+		var tank_x = window.innerWidth/5;
+		var barrelHeight = 0;
+		var bullet = 0;
+		var radius = 20;
+		var rotation = 1;
+		
+		function  drawCanvas(){
+			window.setInterval(animate);
+		}
+		function animate(canvas, ctx){
+			var  canvas  = document.getElementById('tutorial');
+			var  ctx  =  canvas.getContext('2d');
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+			ctx.fillStyle = 'rgb(68, 205, 255)';
+			ctx.fillRect(0, 0, canvas.width, canvas.height-(canvas.height/2.5));//sky
+			ctx.fillStyle = 'rgb(34, 247, 70)';
+			ctx.fillRect(0, canvas.height-(canvas.height/2.5), canvas.width, canvas.height);//grass
+			drawHouse(100, 250, 0, canvas.height-(canvas.height/2.5));
+			drawHouse(100, 150, 450, canvas.height-(canvas.height/2.5));
+			drawHouse(100, 120, 880, canvas.height-(canvas.height/2.5));
+			var snowman_x = canvas.width-(canvas.width/5);
+			drawSnowman(35, snowman_x, canvas.height-(canvas.height/5));
+			
+			var tanklength = 160;
+			var tank_y = canvas.height-(canvas.height/5);
+			
+			if (tank_x < snowman_x-(tanklength*2)){
+				tank_x += 1;
+				rotation += .5;
+			}else if(barrelHeight < 6){
+				barrelHeight += 0.25;
+			}
+			if(barrelHeight == 6){
+				animateShot(ctx, tank_x+radius*3.2+130+bullet, (tank_y-radius*2)- barrelHeight-(bullet/10));
+				if(bullet < 120){
+					bullet += 0.2;
+				}
+			}
+			drawBarrel(ctx, tank_x+radius*3.2, (tank_y-radius*2)- barrelHeight);
+			drawTank(tank_x, tank_y);
+			
+		}
+		function animateShot(ctx, x,  y){
+			ctx.beginPath();//drawing the tires
+			ctx.arc(x, y, 3, 0, Math.PI + (Math.PI*6) / 2, true);
+			ctx.fillStyle = 'rgb(0, 0, 0)';
+			ctx.fill();
+		}
+		function drawSnowman(radius_bot, x , y){
+			var  canvas  = document.getElementById('tutorial');
+			var  ctx  =  canvas.getContext('2d');
+			var startAngle = 0;
+			var endAngle = Math.PI + (Math.PI*6) / 2;
+			var radius = radius_bot
+			for (var i = 1; i <= 3; i++){
+					ctx.beginPath();
+					ctx.arc(x, y, radius, startAngle, endAngle, true);
+					ctx.strokeStyle = 'rgb(0, 0, 0)';
+					ctx.fillStyle = 'rgb(255, 255, 255)';
+					ctx.stroke();
+					ctx.fill();
+					y = y - radius*2+(radius*5/8)
+					radius = radius/1.5
+			}
+		}
+		function  drawHouse(height, width, x, y){
+			var  canvas  = document.getElementById('tutorial');
+			var  ctx  =  canvas.getContext('2d');
+			ctx.beginPath();//house
+			ctx.moveTo(x,y);
+			ctx.lineTo(x,y-height);
+			ctx.lineTo(x+width/2,y-height-(height/2));
+			ctx.lineTo(x+width,y-height);
+			ctx.lineTo(x+width,y);
+			ctx.lineTo(x,y);
+			ctx.fillStyle = 'rgb(198, 192, 192)';
+			ctx.fill();
+			ctx.beginPath();//door 
+			ctx.moveTo(((x+width/2)-(width/8)),y);
+			ctx.lineTo(((x+width/2)-(width/8)),y-height);
+			ctx.lineTo(((x+width/2)+(width/8)),y-height);
+			ctx.lineTo(((x+width/2)+(width/8)),y);
+			ctx.lineTo(((x+width/2)-(width/8)),y);
+			ctx.fillStyle = 'rgb(142, 96, 49)';
+			ctx.fill();
+			ctx.fillStyle = 'rgb(255, 255, 255)';
+			ctx.fillRect((x+(width/10)), (y-height*(3/4)), width/5, height/3);//left window
+			ctx.fillRect((x+width*(7/10)), (y-height*(3/4)), width/5, height/3);//right window
+			ctx.beginPath();//lines on windows
+			ctx.moveTo(x+(width/10),(y-height*(3/4)));
+			ctx.lineTo(x+(width/10)+width/5,(y-height*(3/4)));
+			ctx.lineTo(x+(width/10)+width/5,(y-height*(3/4)+height/3));
+			ctx.lineTo(x+(width/10),(y-height*(3/4)+height/3));
+			ctx.lineTo(x+(width/10),(y-height*(3/4)));
+			ctx.moveTo(x+(width/10)+(width/10),(y-height*(3/4)));
+			ctx.lineTo(x+(width/10)+(width/10),(y-height*(3/4)+height/3));
+			ctx.moveTo(x+(width/10),(y-height*(3/4)+height/6));
+			ctx.lineTo(x+(width/10)+width/5,(y-height*(3/4)+height/6));
+			ctx.moveTo((x+width*(4/5)),(y-height*(3/4)));
+			ctx.lineTo((x+width*(4/5)),(y-height*(3/4)+height/3));
+			ctx.moveTo((x+width*(7/10)),(y-height*(3/4)+height/6));
+			ctx.lineTo((x+width*(9/10)),(y-height*(3/4)+height/6));
+			ctx.moveTo((x+width*(7/10)),(y-height*(3/4)));
+			ctx.lineTo((x+width*(9/10)),(y-height*(3/4)));
+			ctx.lineTo((x+width*(9/10)),(y-height*(3/4)+height/3));
+			ctx.lineTo((x+width*(7/10)),(y-height*(3/4)+height/3));
+			ctx.lineTo((x+width*(7/10)),(y-height*(3/4)));
+			ctx.strokeStyle = 'rgb(0, 0, 0)';
+			ctx.stroke();
+		}
+		function  drawTank(x, y){
+			var  canvas  = document.getElementById('tutorial');
+			var  ctx  =  canvas.getContext('2d');
+			var startAngle = 0;
+			var endAngle = Math.PI + (Math.PI*6) / 2;
+			drawTankTop(ctx, x+radius*3.2, y-radius*2);
+			drawTankTrack(ctx, x, y, radius, startAngle, endAngle);
+		}
+		function  drawTankTop(ctx, x, y){
+			ctx.fillStyle = 'rgb(0, 47, 200)';
+			ctx.fillRect(x, y, 45, 20);//blue rectangle tank top
+
+		}
+		function drawBarrel(ctx, x, y){
+			var tankBarrel = new Path2D();//drawing the barrel
+			tankBarrel.moveTo(x+45,y+10);
+			tankBarrel.lineTo(x+130,y+10-barrelHeight);
+			ctx.stroke(tankBarrel);
+		}
+		function  drawTankTrack(ctx, x, y, radius, startAngle, endAngle){
+			ctx.fillStyle = 'rgb(255, 58, 32)';
+			ctx.fillRect(x+radius, y-radius, 160, 40);//red rectangle tank track
+			for (var i = 1; i <= 4; i++) {
+					x = x + radius*2;
+					ctx.save();
+					ctx.translate(x, y);//trans to
+					ctx.rotate(rotation*(Math.PI/180));//rotate
+					ctx.translate(-x, -y);//trans back
+					ctx.beginPath();//drawing the tires
+					ctx.arc(x, y, radius, startAngle, endAngle, true);
+					ctx.fillStyle = 'rgb(200, 200, 200)';
+					ctx.fill();
+					ctx.beginPath();//drawing spokes on the tires left and right
+					ctx.moveTo((x-radius),y);
+					ctx.lineTo((x+radius),y);
+					ctx.stroke();
+					ctx.beginPath();//drawing spokes on the tires up and down
+					ctx.moveTo(x,y+radius);
+					ctx.lineTo(x,y-radius);
+					ctx.stroke();
+					ctx.restore();
+			}
+		}
+		</script>
+		<style  type="text/css">
+			canvas  {  border:  1px  solid  black;  }
+		</style>
+	</head>
+	<body  onload="drawCanvas();">
+		<canvas  id="tutorial"> </canvas>
+	</body>
+</html>
